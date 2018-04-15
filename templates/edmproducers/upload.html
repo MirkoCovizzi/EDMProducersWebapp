@@ -1,0 +1,12 @@
+{% extends 'edmproducers/base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="hidden" name="uploader" value="{{ user.id }}">
+        <button type="submit">Upload</button>
+    </form>
+{% endblock %}

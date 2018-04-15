@@ -5,9 +5,15 @@ from django.contrib.auth.models import User
 class Genre(models.Model):
     name = models.CharField(max_length=35)
 
+    def __str__(self):
+        return self.name
+
 
 class Tag(models.Model):
     word = models.CharField(max_length=35)
+
+    def __str__(self):
+        return self.word
 
 
 class Profile(models.Model):
@@ -16,17 +22,21 @@ class Profile(models.Model):
     following = models.ManyToManyField('self', related_name='followers')
 
 
-class Song(models.Model):
+class Track(models.Model):
+    track = models.FileField(upload_to='tracks/')
     title = models.CharField(max_length=100)
     slug = models.CharField(max_length=1000)
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag)
     description = models.TextField(max_length=2000)
     allow_download = models.BooleanField(default=False)
-    producer = models.ForeignKey(User, on_delete=models.CASCADE)
+    uploader = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
 
 
 class Like(models.Model):
-    person = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    song = models.ForeignKey(Song, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    song = models.ForeignKey(Track, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
