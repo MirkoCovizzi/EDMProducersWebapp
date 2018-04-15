@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from .utils import upload_track_to
+
 
 class Genre(models.Model):
     name = models.CharField(max_length=35)
@@ -23,7 +25,7 @@ class Profile(models.Model):
 
 
 class Track(models.Model):
-    track = models.FileField(upload_to='tracks/')
+    track = models.FileField(upload_to=upload_track_to)
     title = models.CharField(max_length=100)
     slug = models.CharField(max_length=1000)
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)

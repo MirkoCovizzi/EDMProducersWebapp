@@ -6,3 +6,6 @@ from .models import *
 
 admin.site.register(Genre)
 admin.site.register(Tag)
+admin.site.register(Profile)
+admin.site.register(Track)
+admin.site.register(Like)
