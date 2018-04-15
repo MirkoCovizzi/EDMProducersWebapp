@@ -6,16 +6,16 @@ from .models import Track
 
 
 class SignUpForm(UserCreationForm):
-    first_name = forms.CharField(max_length=30, required=False, help_text="Optional.")
-    last_name = forms.CharField(max_length=30, required=False, help_text="Optional.")
-    email = forms.EmailField(max_length=254, help_text="Required. Insert a valid email address.")
+    profile_name = forms.CharField(help_text="Required. Insert your public profile name.")
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
+        fields = ('profile_name', 'email', 'password1', 'password2', )
 
 
-class SongForm(forms.ModelForm):
+class TrackForm(forms.ModelForm):
+    tags = forms.MultipleChoiceField(required=False)
+
     class Meta:
         model = Track
-        fields = ('track', 'title', 'genre', 'tags', 'description', 'allow_download', 'uploader', )
+        exclude = ('slug', 'uploader', )

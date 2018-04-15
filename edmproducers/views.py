@@ -1,10 +1,9 @@
-from django.core.validators import slug_unicode_re
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 
-from .forms import SignUpForm, SongForm
-from .models import Track
+from .forms import SignUpForm, TrackForm
+from .models import Track, Profile
 
 
 def home(request):
@@ -18,11 +17,11 @@ def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
+            user = form.save()
+            user.refresh_from_db()
+            user.profile.profile_name = form.cleaned_data.get('profile_name')
+            user.save()
+            login(request, user, backend='.auth.EmailAuthenticationBackend')
             return redirect('stream')
     else:
         form = SignUpForm()
@@ -37,13 +36,14 @@ def stream(request):
 @login_required
 def upload(request):
     if request.method == 'POST':
-        form = SongForm(request.POST, request.FILES)
+        form = TrackForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            # Placeholder return
-            return redirect('stream')
+            track = form.save(commit=False)
+            track.uploader = request.user
+            track.save()
+            return redirect('tracks/' + track.slug)
     else:
-        form = SongForm()
+        form = TrackForm()
     return render(request, 'edmproducers/upload.html', {'form': form})
 
 
@@ -56,6 +56,10 @@ def tracks(request):
 def track_detail(request, slug):
     track = Track.objects.get(slug=slug)
     return render(request, 'edmproducers/track-detail.html', {'track': track})
+
+
+def profile_detail(request, slug):
+    profile = Profile.objects.get(slug=slug)
 
 
 def search(request):

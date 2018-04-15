@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from .utils import upload_track_to
 
@@ -21,8 +23,23 @@ class Tag(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bio = models.TextField(max_length=2000)
+    profile_name = models.TextField(max_length=35)
+    slug = models.SlugField()
+    bio = models.TextField(max_length=2000, blank=True)
     following = models.ManyToManyField('self', related_name='followers')
+
+    def __str__(self):
+        return self.user.username
+
+    def save(self, *args, **kwargs):
+        self.user.username = slugify(self.profile_name)
+        super(Profile, self).save(*args, **kwargs)
+
+    @receiver(post_save, sender=User)
+    def update_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+        instance.profile.save()
 
 
 class Track(models.Model):
