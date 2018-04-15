@@ -14,4 +14,5 @@ urlpatterns = [
     path('upload', views.upload, name='upload'),
     path('tracks', views.tracks, name='tracks'),
     path('tracks/<slug:slug>', views.track_detail, name='track_detail'),
+    path('search', views.search, name='search'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
