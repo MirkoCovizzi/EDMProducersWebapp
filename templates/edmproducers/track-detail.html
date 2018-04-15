@@ -1,0 +1,14 @@
+{% extends 'edmproducers/base.html' %}
+
+{% block content %}
+    <br>
+    {{ track }}<br>
+    <audio controls>
+        <source src="{{ MEDIA_URL }}{{ track.track }}">
+    </audio>
+    <br>
+    <h3>Description:</h3>
+    <p>
+    {{ track.description }}
+    </p>
+{% endblock %}

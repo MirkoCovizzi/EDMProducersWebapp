@@ -13,4 +13,5 @@ urlpatterns = [
     path('logout', auth_views.logout, {'next_page': 'home'}, name='logout'),
     path('upload', views.upload, name='upload'),
     path('tracks', views.tracks, name='tracks'),
+    path('tracks/<slug:slug>', views.track_detail, name='track_detail'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -50,3 +50,8 @@ def upload(request):
 def tracks(request):
     track_list = Track.objects.filter(uploader=request.user)
     return render(request, 'edmproducers/tracks.html', {'track_list': track_list})
+
+
+def track_detail(request, slug):
+    track = Track.objects.get(slug=slug)
+    return render(request, 'edmproducers/track-detail.html', {'track': track})
