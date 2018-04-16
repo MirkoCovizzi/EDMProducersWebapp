@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from .models import Track
+from .models import Track, Profile
 
 
 class SignUpForm(UserCreationForm):
@@ -25,3 +25,10 @@ class EditTrackForm(forms.ModelForm):
     class Meta:
         model = Track
         exclude = ('track', 'uploader', )
+
+
+class EditProfileForm(forms.ModelForm):
+
+    class Meta:
+        model = Profile
+        exclude = ('user', 'slug', 'following', )

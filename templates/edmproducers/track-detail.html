@@ -2,6 +2,7 @@
 
 {% block content %}
     <br>
+    <a href="{% url 'profile' track.uploader.profile.slug %}">{{ track.uploader.profile.profile_name }}</a><br>
     {{ track }}<br>
     <audio controls>
         <source src="{{ MEDIA_URL }}{{ track.track }}">

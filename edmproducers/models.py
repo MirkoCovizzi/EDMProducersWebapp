@@ -16,7 +16,7 @@ class Genre(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_name = models.TextField(max_length=35)
+    profile_name = models.CharField(max_length=35)
     slug = models.SlugField()
     bio = models.TextField(max_length=2000, blank=True)
     following = models.ManyToManyField('self', related_name='followers')

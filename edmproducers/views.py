@@ -61,12 +61,12 @@ def track_detail(request, slug):
 
 @login_required
 def track_edit(request, slug):
-    track = get_object_or_404(Track, slug=slug)
+    track = get_object_or_404(Track, slug=slug, uploader=request.user)
     if request.method == 'POST':
         form = EditTrackForm(request.POST, instance=track)
         if form.is_valid():
             form.save()
-            return redirect('stream')
+            return redirect('track_detail', slug)
         else:
             return HttpResponse('Invalid entry.')
     else:
@@ -77,6 +77,21 @@ def track_edit(request, slug):
 def profile_detail(request, slug):
     profile = Profile.objects.get(slug=slug)
     return render(request, 'edmproducers/profile-detail.html', {'profile': profile})
+
+
+@login_required
+def profile_edit(request, slug):
+    profile = get_object_or_404(Profile, slug=slug, user=request.user)
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile', slug)
+        else:
+            return HttpResponse('Invalid entry.')
+    else:
+        form = EditProfileForm(instance=profile)
+    return render(request, 'edmproducers/track-edit.html', {'form': form})
 
 
 def search(request):
