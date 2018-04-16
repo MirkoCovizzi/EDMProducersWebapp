@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.text import slugify
 
 from .utils import upload_track_to
@@ -27,11 +29,23 @@ class Profile(models.Model):
     following = models.ManyToManyField('self', related_name='followers')
 
     def __str__(self):
-        return self.user.username
+        return self.profile_name
 
     def save(self, *args, **kwargs):
-        self.user.username = slugify(self.profile_name)
+        self.slug = slugify(self.profile_name)
         super(Profile, self).save(*args, **kwargs)
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.profile_name = instance.username
+    instance.profile.save()
 
 
 class Track(models.Model):

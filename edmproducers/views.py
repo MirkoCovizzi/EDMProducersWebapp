@@ -60,6 +60,7 @@ def track_detail(request, slug):
 
 def profile_detail(request, slug):
     profile = Profile.objects.get(slug=slug)
+    return render(request, 'edmproducers/profile-detail.html', {'profile': profile})
 
 
 def search(request):
