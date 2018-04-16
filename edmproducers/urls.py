@@ -16,6 +16,7 @@ urlpatterns = [
     path('tracks/<slug:slug>', views.track_detail, name='track_detail'),
     path('tracks/<slug:slug>/edit', views.track_edit, name='track_edit'),
     path('tracks/<slug:slug>/like', views.track_like, name='track_like'),
+    path('tracks/<slug:slug>/comment', views.track_comment, name='track_comment'),
     path('search', views.search, name='search'),
     path('<slug:slug>', views.profile_detail, name='profile'),
     path('<slug:slug>/edit', views.profile_edit, name='profile_edit'),

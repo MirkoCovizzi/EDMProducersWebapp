@@ -15,4 +15,16 @@
     {% if track.uploader == user %}
         <a href="{% url 'tracks' %}/{{ track.slug }}/edit">Edit info</a>
     {% endif %}
+    <h3>Add comment:</h3>
+    <form action="{% url 'track_comment' track.slug %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        {{ comment_form }}
+        <button type="submit">Submit</button>
+    </form>
+    <h3>Comments:</h3>
+    {% for comment in track.comment_set.all %}
+        {{ comment }}
+        <hr>
+    {% endfor %}
 {% endblock %}

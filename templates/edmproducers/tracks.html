@@ -29,8 +29,8 @@
             <br>
             Likes: {{ track.like_set.all.count }}<br>
             <form action="{% url 'track_like' track.slug %}" method="post">
-                <input type="hidden" name="next" value="{{ request.get_full_path }}">
             {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
             {% if track|check_track_like_exists:user %}
                 <button type="submit" style="background-color: red">Like</button>
             {% else %}

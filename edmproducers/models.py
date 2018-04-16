@@ -65,3 +65,14 @@ class Like(models.Model):
 
     class Meta:
         unique_together = (('user', 'track'), )
+
+
+class Comment(models.Model):
+    text = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    track = models.ForeignKey(Track, on_delete=models.CASCADE)
+    parent_comment = models.ForeignKey('Comment', on_delete=models.CASCADE, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.text

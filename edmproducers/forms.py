@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 
-from .models import Track, Profile
+from .models import *
 
 
 class SignUpForm(UserCreationForm):
@@ -18,6 +17,13 @@ class UploadTrackForm(forms.ModelForm):
     class Meta:
         model = Track
         exclude = ('slug', 'uploader', )
+
+
+class CommentTrackForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ('text', )
 
 
 class EditTrackForm(forms.ModelForm):

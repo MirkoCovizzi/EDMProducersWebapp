@@ -56,7 +56,8 @@ def tracks(request):
 
 def track_detail(request, slug):
     track = Track.objects.get(slug=slug)
-    return render(request, 'edmproducers/track-detail.html', {'track': track})
+    comment_form = CommentTrackForm()
+    return render(request, 'edmproducers/track-detail.html', {'track': track, 'comment_form': comment_form})
 
 
 @login_required
@@ -87,6 +88,22 @@ def track_like(request, slug):
             like.save()
         next = request.POST.get('next', '/')
         return HttpResponseRedirect(next)
+    else:
+        return HttpResponse('Invalid entry.')
+
+
+@login_required
+def track_comment(request, slug):
+    track = get_object_or_404(Track, slug=slug)
+    if request.method == 'POST':
+        form = CommentTrackForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.track = track
+            comment.save()
+            next = request.POST.get('next', '/')
+            return HttpResponseRedirect(next)
     else:
         return HttpResponse('Invalid entry.')
 
