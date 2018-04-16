@@ -1,6 +1,7 @@
 {% extends 'edmproducers/base.html' %}
 
 {% block content %}
+    {% load track_extras %}
     <br>
     <a href="{% url 'profile' track.uploader.profile.slug %}">{{ track.uploader.profile.profile_name }}</a><br>
     {{ track }}<br>
@@ -8,6 +9,16 @@
         <source src="{{ MEDIA_URL }}{{ track.track }}">
     </audio>
     <br>
+    Likes: {{ track.like_set.all.count }}<br>
+    <form action="{% url 'track_like' track.slug %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        {% if track|check_track_like_exists:user %}
+            <button type="submit" style="color: red">Like</button>
+        {% else %}
+            <button type="submit">Like</button>
+        {% endif %}
+    </form>
     <h3>Description:</h3>
     <p>
     {{ track.description }}
