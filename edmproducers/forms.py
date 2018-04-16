@@ -6,11 +6,11 @@ from .models import Track
 
 
 class SignUpForm(UserCreationForm):
-    profile_name = forms.CharField(help_text="Required. Insert your public profile name.")
+    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
 
     class Meta:
         model = User
-        fields = ('profile_name', 'email', 'password1', 'password2', )
+        fields = ('username', 'email', 'password1', 'password2', )
 
 
 class TrackForm(forms.ModelForm):

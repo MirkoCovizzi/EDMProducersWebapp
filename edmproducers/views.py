@@ -17,11 +17,11 @@ def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            user.refresh_from_db()
-            user.profile.profile_name = form.cleaned_data.get('profile_name')
-            user.save()
-            login(request, user, backend='.auth.EmailAuthenticationBackend')
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
             return redirect('stream')
     else:
         form = SignUpForm()
