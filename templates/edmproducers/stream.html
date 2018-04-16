@@ -1,6 +1,10 @@
 {% extends 'edmproducers/base.html' %}
 
 {% block content %}
-    <h2>Welcome, {{ user.username }}</h2>
+    {% if user.profile.profile_name %}
+        <h2>Welcome, {{ user.profile.profile_name }}</h2>
+    {% else %}
+        <h2>Welcome, {{ user.username }}</h2>
+    {% endif %}
     <p>Your email address: {{ user.email }}</p>
 {% endblock %}
