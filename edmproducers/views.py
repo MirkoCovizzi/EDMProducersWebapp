@@ -1,10 +1,10 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 
 from .forms import *
-from .models import Track, Profile
+from .models import *
 
 
 def home(request):
@@ -74,6 +74,23 @@ def track_edit(request, slug):
     return render(request, 'edmproducers/track-edit.html', {'form': form})
 
 
+@login_required
+def track_like(request, slug):
+    track = get_object_or_404(Track, slug=slug)
+    if request.method == 'POST':
+        likes = track.like_set.all()
+        if likes.filter(user=request.user).exists():
+            like = likes.filter(user=request.user).get()
+            like.delete()
+        else:
+            like = Like(user=request.user, track=track)
+            like.save()
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
+    else:
+        return HttpResponse('Invalid entry.')
+
+
 def profile_detail(request, slug):
     profile = Profile.objects.get(slug=slug)
     return render(request, 'edmproducers/profile-detail.html', {'profile': profile})
@@ -85,8 +102,8 @@ def profile_edit(request, slug):
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=profile)
         if form.is_valid():
-            form.save()
-            return redirect('profile', slug)
+            profile = form.save()
+            return redirect('profile', profile.slug)
         else:
             return HttpResponse('Invalid entry.')
     else:

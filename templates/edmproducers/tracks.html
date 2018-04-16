@@ -17,6 +17,7 @@
 {% endblock %}
 
 {% block content %}
+    {% load track_extras %}
     <h1>Tracks:</h1>
     {% if track_list %}
         {% for track in track_list%}
@@ -26,7 +27,16 @@
                 <source src="{{ MEDIA_URL }}{{ track.track }}">
             </audio>
             <br>
-            Likes: {{ track.like_set.all.count }}
+            Likes: {{ track.like_set.all.count }}<br>
+            <form action="{% url 'track_like' track.slug %}" method="post">
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            {% csrf_token %}
+            {% if track|check_track_like_exists:user %}
+                <button type="submit" style="background-color: red">Like</button>
+            {% else %}
+                <button type="submit" style="background-color: grey">Like</button>
+            {% endif %}
+            </form>
             <hr>
         {% endfor %}
     {% else %}
