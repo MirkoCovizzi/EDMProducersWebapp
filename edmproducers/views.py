@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 
-from .forms import SignUpForm, TrackForm
+from .forms import *
 from .models import Track, Profile
 
 
@@ -36,14 +37,14 @@ def stream(request):
 @login_required
 def upload(request):
     if request.method == 'POST':
-        form = TrackForm(request.POST, request.FILES)
+        form = UploadTrackForm(request.POST, request.FILES)
         if form.is_valid():
             track = form.save(commit=False)
             track.uploader = request.user
             track.save()
             return redirect('tracks/' + track.slug)
     else:
-        form = TrackForm()
+        form = UploadTrackForm()
     return render(request, 'edmproducers/upload.html', {'form': form})
 
 
@@ -56,6 +57,21 @@ def tracks(request):
 def track_detail(request, slug):
     track = Track.objects.get(slug=slug)
     return render(request, 'edmproducers/track-detail.html', {'track': track})
+
+
+@login_required
+def track_edit(request, slug):
+    track = get_object_or_404(Track, slug=slug)
+    if request.method == 'POST':
+        form = EditTrackForm(request.POST, instance=track)
+        if form.is_valid():
+            form.save()
+            return redirect('stream')
+        else:
+            return HttpResponse('Invalid entry.')
+    else:
+        form = EditTrackForm(instance=track)
+    return render(request, 'edmproducers/track-edit.html', {'form': form})
 
 
 def profile_detail(request, slug):

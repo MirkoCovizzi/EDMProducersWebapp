@@ -13,9 +13,15 @@ class SignUpForm(UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2', )
 
 
-class TrackForm(forms.ModelForm):
-    tags = forms.MultipleChoiceField(required=False)
+class UploadTrackForm(forms.ModelForm):
 
     class Meta:
         model = Track
         exclude = ('slug', 'uploader', )
+
+
+class EditTrackForm(forms.ModelForm):
+
+    class Meta:
+        model = Track
+        exclude = ('track', 'uploader', )

@@ -11,4 +11,7 @@
     <p>
     {{ track.description }}
     </p>
+    {% if track.uploader == user %}
+        <a href="{% url 'tracks' %}/{{ track.slug }}/edit">Edit info</a>
+    {% endif %}
 {% endblock %}
