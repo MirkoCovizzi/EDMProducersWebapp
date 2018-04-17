@@ -1,9 +1,18 @@
 {% extends 'edmproducers/base.html' %}
 
 {% block content %}
-    <h2>Profile of: {{ profile.profile_name }}</h2>
-    <h3>Bio: {{ profile.bio }}</h3>
-    {% if profile.user == user %}
-        <a href="{{ profile.slug }}/edit">Edit profile</a>
-    {% endif %}
+    <div class="card text-center">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">All</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'tracks' %}">Tracks</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+        </div>
+    </div>
 {% endblock %}

@@ -3,24 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <title>EDMProducers</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js"
+            integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+"
+            crossorigin="anonymous"></script>
     {% block header %}
     {% endblock %}
 </head>
 <body>
-    <h1>EDMProducers</h1>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
+    <a class="navbar-brand" href="#">EDMProducers</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample09"
+            aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <div>
-    {% if user.is_authenticated %}
-        <a href="{% url 'stream' %}">Home</a>
-        <a href="{% url 'tracks' %}">Tracks</a>
-        <a href="{% url 'upload' %}">Upload</a>
-        <a href="{% url 'profile' user.profile.slug %}">Profile</a>
-        <a href="{% url 'logout' %}">logout</a>
-    {% else %}
-        <a href="{% url 'login' %}">login</a> / <a href="{% url 'signup' %}">signup</a>
-    {% endif %}
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'stream' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Library</a>
+                </li>
+            {% endif %}
+        </ul>
+        <form class="mx-3 my-auto d-inline w-100">
+            <div class="input-group">
+                <input type="text" class="form-control border border-right-0"
+                       placeholder="Search artists and tracks...">
+                <span class="input-group-append">
+                <button class="btn btn-secondary border border-left-0" type="button">
+                    <i class="fa fa-search"></i>
+                </button>
+              </span>
+            </div>
+        </form>
+        <ul class="navbar-nav" style="width: 300px">
+            {% if not user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'signup' %}">Signup</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'upload' %}">Upload</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">{{ user.profile.profile_name }}</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{% url 'profile' user.profile.slug %}">Profile</a>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </li>
+            {% endif %}
+        </ul>
     </div>
+</nav>
+<div class="container-fluid">
     {% block content %}
     {% endblock %}
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
 </body>
 </html>
