@@ -17,25 +17,29 @@
 {% endblock %}
 
 {% block content %}
-    <div class="card text-center">
-        <div class="card-header">
-            <ul class="nav nav-tabs card-header-tabs">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'profile' user.profile.slug %}">All</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Tracks</a>
-                </li>
-            </ul>
-        </div>
-        <div class="card-body">
-            {% if track_list %}
-                {% for track in track_list%}
-                    {% include 'edmproducers/track.html' %}
-                {% endfor %}
-            {% else %}
-                There are no tracks to show.
-            {% endif %}
-        </div>
-    </div>
+    {% load track_extras %}
+    <h1>Tracks:</h1>
+    {% if track_list %}
+        {% for track in track_list%}
+            <a href="{% url 'profile' track.uploader.profile.slug %}">{{ track.uploader.profile.profile_name }}</a><br>
+            <a href="{% url 'tracks' %}/{{ track.slug }}">{{ track }}</a><br>
+            <audio controls>
+                <source src="{{ MEDIA_URL }}{{ track.track }}">
+            </audio>
+            <br>
+            Likes: {{ track.like_set.all.count }}<br>
+            <form action="{% url 'track_like' track.slug %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                {% if track|check_track_like_exists:user %}
+                    <button type="submit" style="color: red">Like</button>
+                {% else %}
+                    <button type="submit">Like</button>
+                {% endif %}
+            </form>
+            <hr>
+        {% endfor %}
+    {% else %}
+        There are no tracks to show.
+    {% endif %}
 {% endblock %}
