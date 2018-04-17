@@ -3,29 +3,55 @@
 {% load static %}
 
 {% block header %}
-    <script type="text/javascript">
-        document.addEventListener('play', function (e) {
-            const audios = document.getElementsByTagName('audio');
-            let i = 0, len = audios.length;
-            for (; i < len; i++) {
-                if (audios[i] !== e.target) {
-                    audios[i].pause();
-                }
-            }
-        }, true);
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/2.0.5/wavesurfer.min.js"></script>
 {% endblock %}
 
 {% block content %}
     {% load track_extras %}
     <h1>Tracks:</h1>
     {% if track_list %}
-        {% for track in track_list%}
+        {% for track in track_list %}
             <a href="{% url 'profile' track.uploader.profile.slug %}">{{ track.uploader.profile.profile_name }}</a><br>
             <a href="{% url 'tracks' %}/{{ track.slug }}">{{ track }}</a><br>
-            <audio controls>
-                <source src="{{ MEDIA_URL }}{{ track.track }}">
-            </audio>
+            <div id="waveform{{ track.id }}"></div>
+            <script type="text/javascript">
+                var wavesurfer{{ track.id }} = WaveSurfer.create({
+                    // Use the id or class-name of the element you created, as a selector
+                    container: '#waveform{{ track.id }}',
+                    // The color can be either a simple CSS color or a Canvas gradient
+                    waveColor: 'grey',
+                    progressColor: 'orange',
+                    cursorColor: '#fff',
+                    // This parameter makes the waveform look like SoundCloud's player
+                    barWidth: 3
+                });
+
+                wavesurfer{{ track.id }}.load('{{ MEDIA_URL }}{{ track.track }}');
+            </script>
+            <div class="controls">
+                <button class="btn btn-primary" onclick="wavesurfer{{ track.id }}.skipBackward()">
+                    <i class="fa fa-step-backward"></i>
+                    Backward
+                </button>
+
+                <button class="btn btn-primary" onclick="wavesurfer{{ track.id }}.playPause()">
+                    <i class="fa fa-play"></i>
+                    Play
+                    /
+                    <i class="fa fa-pause"></i>
+                    Pause
+                </button>
+
+                <button class="btn btn-primary" onclick="wavesurfer{{ track.id }}.skipForward()">
+                    <i class="fa fa-step-forward"></i>
+                    Forward
+                </button>
+
+                <button class="btn btn-primary" onclick="wavesurfer{{ track.id }}.toggleMute()">
+                    <i class="fa fa-volume-off"></i>
+                    Toggle Mute
+                </button>
+            </div>
             <br>
             Likes: {{ track.like_set.all.count }}<br>
             <form action="{% url 'track_like' track.slug %}" method="post">
