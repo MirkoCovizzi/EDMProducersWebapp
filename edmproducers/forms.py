@@ -16,7 +16,7 @@ class UploadTrackForm(forms.ModelForm):
 
     class Meta:
         model = Track
-        exclude = ('slug', 'uploader', )
+        fields = ('track', 'title', 'genre', 'description', )
 
 
 class CommentTrackForm(forms.ModelForm):
@@ -30,11 +30,11 @@ class EditTrackForm(forms.ModelForm):
 
     class Meta:
         model = Track
-        exclude = ('track', 'uploader', )
+        fields = ('title', 'genre', 'description', )
 
 
 class EditProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        exclude = ('user', 'slug', 'following', )
+        fields = ('name', 'bio', )

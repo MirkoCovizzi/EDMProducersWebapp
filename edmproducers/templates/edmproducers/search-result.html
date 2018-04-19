@@ -21,15 +21,15 @@
     <h1>Results:</h1>
     {% if track_list %}
         {% for track in track_list %}
-            <a href="{{ track.uploader.profile.slug }}">{{ track.uploader.profile.profile_name }}</a><br>
-            <a href="{% url 'tracks' %}/{{ track.slug }}">{{ track }}</a><br>
+            <a href="{{ track.uploader.profile.slug }}">{{ track.uploader.profile.name }}</a><br>
+            <a href="{% url 'track_detail' track.uploader.profile.slug track.slug %}">{{ track }}</a><br>
             <audio controls>
                 <source src="{{ MEDIA_URL }}{{ track.track }}">
             </audio>
             <br>
             Likes: {{ track.like_set.all.count }}<br>
             {% if user.is_authenticated %}
-            <form action="{% url 'track_like' track.slug %}" method="post">
+            <form action="{% url 'track_like' track.uploader.profile.slug track.slug %}" method="post">
                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
                 {% csrf_token %}
                 {% if track|check_track_like_exists:user %}

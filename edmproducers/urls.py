@@ -6,18 +6,18 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('', views.root, name='root'),
     path('stream', views.stream, name='stream'),
     path('signup', views.signup, name='signup'),
     path('login', auth_views.login, {'template_name': 'edmproducers/login.html'}, name='login'),
-    path('logout', auth_views.logout, {'next_page': 'home'}, name='logout'),
+    path('logout', auth_views.logout, {'next_page': 'root'}, name='logout'),
     path('upload', views.upload, name='upload'),
-    path('tracks', views.tracks, name='tracks'),
-    path('tracks/<slug:slug>', views.track_detail, name='track_detail'),
-    path('tracks/<slug:slug>/edit', views.track_edit, name='track_edit'),
-    path('tracks/<slug:slug>/like', views.track_like, name='track_like'),
-    path('tracks/<slug:slug>/comment', views.track_comment, name='track_comment'),
     path('search', views.search, name='search'),
-    path('<slug:slug>', views.profile_detail, name='profile'),
-    path('<slug:slug>/edit', views.profile_edit, name='profile_edit'),
+    path('<slug:profile_slug>', views.profile_detail, name='profile'),
+    path('<slug:profile_slug>/edit', views.profile_edit, name='profile_edit'),
+    path('<slug:profile_slug>/tracks', views.tracks, name='tracks'),
+    path('<slug:profile_slug>/<slug:track_slug>', views.track_detail, name='track_detail'),
+    path('<slug:profile_slug>/<slug:track_slug>/edit', views.track_edit, name='track_edit'),
+    path('<slug:profile_slug>/<slug:track_slug>/like', views.track_like, name='track_like'),
+    path('<slug:profile_slug>/<slug:track_slug>/comment', views.track_comment, name='track_comment'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

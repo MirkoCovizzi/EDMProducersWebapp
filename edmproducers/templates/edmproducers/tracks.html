@@ -11,8 +11,8 @@
     <h1>Tracks:</h1>
     {% if track_list %}
         {% for track in track_list %}
-            <a href="{% url 'profile' track.uploader.profile.slug %}">{{ track.uploader.profile.profile_name }}</a><br>
-            <a href="{% url 'tracks' %}/{{ track.slug }}">{{ track }}</a><br>
+            <a href="{% url 'profile' track.uploader.profile.slug %}">{{ track.uploader.profile.name }}</a><br>
+            <a href="{% url 'track_detail' track.uploader.profile.slug track.slug %}">{{ track }}</a><br>
             <div id="waveform{{ track.id }}"></div>
             <script type="text/javascript">
                 var wavesurfer{{ track.id }} = WaveSurfer.create({
@@ -54,7 +54,7 @@
             </div>
             <br>
             Likes: {{ track.like_set.all.count }}<br>
-            <form action="{% url 'track_like' track.slug %}" method="post">
+            <form action="{% url 'track_like' track.uploader.profile.slug track.slug %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
                 {% if track|check_track_like_exists:user %}

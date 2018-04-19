@@ -1,9 +1,9 @@
 {% extends 'edmproducers/base.html' %}
 
 {% block content %}
-    <h2>Profile of: {{ profile.profile_name }}</h2>
+    <h2>Profile of: {{ profile.name }}</h2>
     <h3>Bio: {{ profile.bio }}</h3>
     {% if profile.user == user %}
-        <a href="{{ profile.slug }}/edit">Edit profile</a>
+        <a href="{% url 'profile_edit' profile.slug %}">Edit profile</a>
     {% endif %}
 {% endblock %}

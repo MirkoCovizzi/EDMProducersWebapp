@@ -12,7 +12,7 @@
     <div>
     {% if user.is_authenticated %}
         <a href="{% url 'stream' %}">Home</a>
-        <a href="{% url 'tracks' %}">Tracks</a>
+        <a href="{% url 'tracks' user.profile.slug %}">Tracks</a>
         <a href="{% url 'upload' %}">Upload</a>
         <a href="{% url 'profile' user.profile.slug %}">Profile</a>
         <a href="{% url 'logout' %}">logout</a>

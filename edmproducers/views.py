@@ -7,11 +7,16 @@ from .forms import *
 from .models import *
 
 
-def home(request):
+def root(request):
     if request.user.is_authenticated:
         return redirect('stream')
     else:
-        return render(request, 'edmproducers/home.html')
+        return render(request, 'edmproducers/welcome.html')
+
+
+@login_required
+def stream(request):
+    return render(request, 'edmproducers/stream.html')
 
 
 def signup(request):
@@ -30,11 +35,6 @@ def signup(request):
 
 
 @login_required
-def stream(request):
-    return render(request, 'edmproducers/stream.html')
-
-
-@login_required
 def upload(request):
     if request.method == 'POST':
         form = UploadTrackForm(request.POST, request.FILES)
@@ -42,32 +42,32 @@ def upload(request):
             track = form.save(commit=False)
             track.uploader = request.user
             track.save()
-            return redirect('tracks/' + track.slug)
+            return redirect('track_detail', profile_slug=request.user.profile.slug, track_slug=track.slug)
     else:
         form = UploadTrackForm()
     return render(request, 'edmproducers/upload.html', {'form': form})
 
 
-@login_required
-def tracks(request):
-    track_list = Track.objects.filter(uploader=request.user)
+def tracks(request, profile_slug):
+    uploader = Profile.objects.get(slug=profile_slug)
+    track_list = Track.objects.filter(uploader=uploader.user)
     return render(request, 'edmproducers/tracks.html', {'track_list': track_list})
 
 
-def track_detail(request, slug):
-    track = Track.objects.get(slug=slug)
+def track_detail(request, profile_slug, track_slug):
+    track = Track.objects.get(slug=track_slug)
     comment_form = CommentTrackForm()
     return render(request, 'edmproducers/track-detail.html', {'track': track, 'comment_form': comment_form})
 
 
 @login_required
-def track_edit(request, slug):
-    track = get_object_or_404(Track, slug=slug, uploader=request.user)
+def track_edit(request, profile_slug, track_slug):
+    track = get_object_or_404(Track, slug=track_slug, uploader=request.user)
     if request.method == 'POST':
         form = EditTrackForm(request.POST, instance=track)
         if form.is_valid():
             form.save()
-            return redirect('track_detail', slug)
+            return redirect('track_detail', profile_slug=profile_slug, track_slug=track_slug)
         else:
             return HttpResponse('Invalid entry.')
     else:
@@ -76,8 +76,8 @@ def track_edit(request, slug):
 
 
 @login_required
-def track_like(request, slug):
-    track = get_object_or_404(Track, slug=slug)
+def track_like(request, profile_slug, track_slug):
+    track = get_object_or_404(Track, slug=track_slug)
     if request.method == 'POST':
         likes = track.like_set.all()
         if likes.filter(user=request.user).exists():
@@ -93,8 +93,8 @@ def track_like(request, slug):
 
 
 @login_required
-def track_comment(request, slug):
-    track = get_object_or_404(Track, slug=slug)
+def track_comment(request, profile_slug, track_slug):
+    track = get_object_or_404(Track, slug=track_slug)
     if request.method == 'POST':
         form = CommentTrackForm(request.POST)
         if form.is_valid():
@@ -108,14 +108,14 @@ def track_comment(request, slug):
         return HttpResponse('Invalid entry.')
 
 
-def profile_detail(request, slug):
-    profile = Profile.objects.get(slug=slug)
+def profile_detail(request, profile_slug):
+    profile = Profile.objects.get(slug=profile_slug)
     return render(request, 'edmproducers/profile-detail.html', {'profile': profile})
 
 
 @login_required
-def profile_edit(request, slug):
-    profile = get_object_or_404(Profile, slug=slug, user=request.user)
+def profile_edit(request, profile_slug):
+    profile = get_object_or_404(Profile, slug=profile_slug, user=request.user)
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=profile)
         if form.is_valid():
@@ -129,6 +129,10 @@ def profile_edit(request, slug):
 
 
 def search(request):
-    queryset = Track.objects.all()
-    track_list = queryset.filter(slug__icontains=request.GET.get('q').lower())
-    return render(request, 'edmproducers/search-result.html', {'track_list': track_list})
+    querystring = request.GET.get('q')
+    if querystring:
+        queryset = Track.objects.all()
+        track_list = queryset.filter(slug__icontains=querystring.lower())
+        return render(request, 'edmproducers/search-result.html', {'track_list': track_list})
+    else:
+        return HttpResponse('Invalid entry.')
