@@ -1,9 +1,22 @@
 {% extends 'edmproducers/base.html' %}
 
 {% block content %}
+    {% load profile_extras %}
     <h2>Profile of: {{ profile.name }}</h2>
     <h3>Bio: {{ profile.bio }}</h3>
     {% if profile.user == user %}
         <a href="{% url 'profile_edit' profile.slug %}">Edit profile</a>
+    {% endif %}
+    {% if user.is_authenticated %}
+        <form action="{% url 'profile_follow' profile.slug %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            {% if profile|check_profile_follow_exists:user %}
+                <button type="submit" style="color: red">Follow</button>
+            {% else %}
+                <button type="submit">Follow</button>
+            {% endif %}
+        </form>
+
     {% endif %}
 {% endblock %}

@@ -22,7 +22,7 @@ class Profile(models.Model):
     name = models.CharField(max_length=35)
     slug = models.SlugField()
     bio = models.TextField(max_length=2000, blank=True)
-    following = models.ManyToManyField('self', related_name='followers')
+    following = models.ManyToManyField('self', related_name='followers', symmetrical=False)
 
     def __str__(self):
         return self.name

@@ -14,7 +14,7 @@
         <a href="{% url 'stream' %}">Home</a>
         <a href="{% url 'tracks' user.profile.slug %}">Tracks</a>
         <a href="{% url 'upload' %}">Upload</a>
-        <a href="{% url 'profile' user.profile.slug %}">Profile</a>
+        <a href="{% url 'profile_detail' user.profile.slug %}">Profile</a>
         <a href="{% url 'logout' %}">logout</a>
     {% else %}
         <a href="{% url 'login' %}">login</a> / <a href="{% url 'signup' %}">signup</a>

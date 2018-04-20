@@ -120,12 +120,29 @@ def profile_edit(request, profile_slug):
         form = EditProfileForm(request.POST, instance=profile)
         if form.is_valid():
             profile = form.save()
-            return redirect('profile', profile.slug)
+            return redirect('profile_detail', profile.slug)
         else:
             return HttpResponse('Invalid entry.')
     else:
         form = EditProfileForm(instance=profile)
     return render(request, 'edmproducers/track-edit.html', {'form': form})
+
+
+@login_required
+def profile_follow(request, profile_slug):
+    profile = get_object_or_404(Profile, slug=profile_slug)
+    if request.method == 'POST':
+        followers = profile.followers.all()
+        if followers.filter(user=request.user).exists():
+            profile.followers.remove(request.user.profile)
+            profile.save()
+        else:
+            profile.followers.add(request.user.profile)
+            profile.save()
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
+    else:
+        return HttpResponse('Invalid entry.')
 
 
 def search(request):
