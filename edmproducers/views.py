@@ -109,7 +109,7 @@ def track_comment(request, profile_slug, track_slug):
 
 
 def profile_detail(request, profile_slug):
-    profile = Profile.objects.get(slug=profile_slug)
+    profile = get_object_or_404(Profile, slug=profile_slug)
     return render(request, 'edmproducers/profile-detail.html', {'profile': profile})
 
 

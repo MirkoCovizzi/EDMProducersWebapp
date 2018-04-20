@@ -3,7 +3,7 @@
 {% block content %}
     {% load track_extras %}
     <br>
-    <a href="{% url 'profile' track.uploader.profile.slug %}">{{ track.uploader.profile.name }}</a><br>
+    <a href="{% url 'profile_detail' track.uploader.profile.slug %}">{{ track.uploader.profile.name }}</a><br>
     {{ track }}<br>
     <audio controls>
         <source src="{{ MEDIA_URL }}{{ track.track }}">
