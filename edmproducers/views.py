@@ -131,7 +131,7 @@ def profile_edit(request, profile_slug):
 @login_required
 def profile_follow(request, profile_slug):
     profile = get_object_or_404(Profile, slug=profile_slug)
-    if request.method == 'POST':
+    if request.method == 'POST' and profile.user != request.user:
         followers = profile.followers.all()
         if followers.filter(user=request.user).exists():
             profile.followers.remove(request.user.profile)
