@@ -64,7 +64,7 @@ def track_detail(request, profile_slug, track_slug):
 def track_edit(request, profile_slug, track_slug):
     track = get_object_or_404(Track, slug=track_slug, uploader=request.user)
     if request.method == 'POST':
-        form = EditTrackForm(request.POST, instance=track)
+        form = EditTrackForm(request.POST, request.FILES, instance=track)
         if form.is_valid():
             form.save()
             return redirect('track_detail', profile_slug=profile_slug, track_slug=track_slug)
@@ -117,7 +117,7 @@ def profile_detail(request, profile_slug):
 def profile_edit(request, profile_slug):
     profile = get_object_or_404(Profile, slug=profile_slug, user=request.user)
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=profile)
+        form = EditProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             profile = form.save()
             return redirect('profile_detail', profile.slug)

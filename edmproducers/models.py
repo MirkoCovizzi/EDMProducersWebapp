@@ -6,7 +6,7 @@ from django.utils.text import slugify
 import random
 import string
 
-from .utils import upload_track_to
+from .utils import upload_track_to, upload_image_to
 
 
 class Genre(models.Model):
@@ -18,7 +18,7 @@ class Genre(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(blank=True)
+    image = models.ImageField(upload_to=upload_image_to, blank=True)
     name = models.CharField(max_length=35)
     slug = models.SlugField()
     bio = models.TextField(max_length=2000, blank=True)
@@ -50,7 +50,7 @@ class Track(models.Model):
     slug = models.SlugField()
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
     description = models.TextField(max_length=2000, blank=True)
-    image = models.ImageField(blank=True)
+    image = models.ImageField(upload_to=upload_image_to, blank=True)
     uploader = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):

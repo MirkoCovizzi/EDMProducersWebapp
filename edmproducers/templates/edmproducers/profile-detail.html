@@ -3,6 +3,7 @@
 {% block content %}
     {% load profile_extras %}
     <h2>Profile of: {{ profile.name }}</h2>
+    <img src="{{ MEDIA_URL }}{{ profile.image }}" width="100">
     <h3>Bio: {{ profile.bio }}</h3>
     {% if profile.user == user %}
         <a href="{% url 'profile_edit' profile.slug %}">Edit profile</a>

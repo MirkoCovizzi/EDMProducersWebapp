@@ -16,7 +16,7 @@ class UploadTrackForm(forms.ModelForm):
 
     class Meta:
         model = Track
-        fields = ('track', 'title', 'genre', 'description', )
+        fields = ('track', 'title', 'genre', 'description', 'image', )
 
 
 class CommentTrackForm(forms.ModelForm):
@@ -30,11 +30,11 @@ class EditTrackForm(forms.ModelForm):
 
     class Meta:
         model = Track
-        fields = ('title', 'genre', 'description', )
+        fields = ('title', 'genre', 'description', 'image', )
 
 
 class EditProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ('name', 'bio', )
+        fields = ('name', 'bio', 'image', )

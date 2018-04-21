@@ -15,3 +15,9 @@ def upload_track_to(instance, filename):
     instance.track.file.open()
     filename_base, filename_ext = os.path.splitext(filename)
     return "{0}{1}".format('tracks' + os.sep + hash_file(instance.track.file), filename_ext)
+
+
+def upload_image_to(instance, filename):
+    instance.image.file.open()
+    filename_base, filename_ext = os.path.splitext(filename)
+    return "{0}{1}".format('images' + os.sep + hash_file(instance.image.file), filename_ext)

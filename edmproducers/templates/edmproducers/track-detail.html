@@ -5,6 +5,7 @@
     <br>
     <a href="{% url 'profile_detail' track.uploader.profile.slug %}">{{ track.uploader.profile.name }}</a><br>
     {{ track }}<br>
+    <img src="{{ MEDIA_URL }}{{ track.image }}" width="50">
     <audio controls>
         <source src="{{ MEDIA_URL }}{{ track.track }}">
     </audio>
