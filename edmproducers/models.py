@@ -1,10 +1,11 @@
+import random
+import string
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
-import random
-import string
 
 from .utils import upload_track_to, upload_image_to
 
@@ -74,7 +75,7 @@ class Comment(models.Model):
     text = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     track = models.ForeignKey(Track, on_delete=models.CASCADE)
-    parent_comment = models.ForeignKey('Comment', on_delete=models.CASCADE, blank=True, null=True)
+    parent_comment = models.ForeignKey('Comment', on_delete=models.CASCADE, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

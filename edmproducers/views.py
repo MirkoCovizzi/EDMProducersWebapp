@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 
-from .forms import *
-from .models import *
+from .forms import SignUpForm, UploadTrackForm, CommentTrackForm, EditTrackForm, EditProfileForm
+from .models import Profile, Track, Like
 
 
 def root(request):
